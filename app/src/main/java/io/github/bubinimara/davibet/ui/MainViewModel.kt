@@ -20,13 +20,11 @@ class MainViewModel : ViewModel() {
     }
     fun load() {
         Log.d(TAG, "load: ")
-        repository.justStream()
-/*
+       /// repository.justStream()
         viewModelScope.launch {
             repository.streamTweets("").collect {
                 Log.d(TAG, "load: $it")
             }
         }
-*/
     }
 }

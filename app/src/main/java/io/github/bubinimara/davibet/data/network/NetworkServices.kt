@@ -21,19 +21,10 @@ private const val contentTypeValue = "application/json;charset=utf-8"
 class NetworkServices {
     private companion object {
         val BASE_URL = "https://stream.twitter.com"
-        //val BASE_URL = "https://api.twitter.com/"
     }
-
 
     private val retrofit:Retrofit
     val apiService: ApiService
-
-    val oauthInterceptor = Oauth1SigningInterceptor.Builder()
-        .consumerKey("c5FjVSnAvXKbQoDGCjuPfI1DW")
-        .consumerSecret("MScmUMUsITT2dLJ5jBcicybXQ95Nik8WLmr2oNITM3TZV7HETD")
-        .accessToken("1158702590-u7y8KvDH0fy1deKURiumS3LmbYFuJkVIK5koy4F")
-        .accessSecret("AUdy3EyV6Nf1UNErFu7tcID1a2LQE8L3OBP3XALBC4mOn")
-        .build()
 
     init {
         val logInterceptor = HttpLoggingInterceptor()
@@ -52,10 +43,9 @@ class NetworkServices {
         val client = OkHttpClient.Builder()
             //.addInterceptor(interceptor)
             .connectTimeout(100, TimeUnit.SECONDS)
-            .readTimeout(100, TimeUnit.SECONDS)
-         //   .addInterceptor(logInterceptor)
+            .readTimeout(100, TimeUnit.SECONDS) // every 20 seconds twitter send a ping
+           // .addInterceptor(logInterceptor)
             .addInterceptor(SigningInterceptor(consumer))
-    //        .addInterceptor(oauthInterceptor)
             .build()
 
         retrofit = Retrofit.Builder()

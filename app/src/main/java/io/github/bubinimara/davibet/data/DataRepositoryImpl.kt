@@ -10,11 +10,16 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.JsonReader
 import io.github.bubinimara.davibet.data.network.ReadExample
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import okhttp3.Dispatcher
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.Reader
+import java.lang.Runnable
 
 
 class DataRepositoryImpl(private val apiService:ApiService) : DataRepository {
@@ -28,45 +33,54 @@ class DataRepositoryImpl(private val apiService:ApiService) : DataRepository {
         call.enqueue(ReadExample.responseBodyCallback)
     }
     override fun streamTweets(track: String): Flow<Tweet> {
-        return flow {
+        return flow<Tweet> {
             Log.d(TAG, "streamTweets: $track")
-            val gson: Gson = GsonBuilder().create()
+            emit(Tweet("1"))
             val call = apiService.track()
-            //call.enqueue(ReadExample())
-
-                call.enqueue(ReadExample.responseBodyCallback)
-
-
-/*
-            call.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    Log.d(TAG, "onResponse: getting byte stream ")
-                    val inputStream = InputStreamReader(response.body()!!.byteStream(),"UTF-8")
-                    val reader = JsonReader(inputStream)
-                    reader.beginArray()
-                    Log.d(TAG, "onResponse: starting loop")
-                    while (reader.hasNext()) {
-
-                        val obj: JsonObject = gson.fromJson(reader,JsonObject::class.java)
-                        Log.d(TAG, "onResponse: " + obj.toString())
-
-                    }
-
-                }
-
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.e(TAG, "onFailure: ",t )
-                }
-
-            })
-            Log.d(TAG, "streamTweets: End")
-
- */
-        }
-
+            call.enqueue(StreamCallback())
+        }.flowOn(Dispatchers.IO)
     }
 
+    class StreamCallback:Callback<ResponseBody>{
+        private val stream  = MutableStateFlow<Tweet?>(null)
+        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+            Log.d(TAG, "onResponse: ")
+            if(response.isSuccessful){
+                Thread(Runnable {
+                    Log.d(TAG, "running: ")
+                    read(response)
+                }).start()
+
+            }
+        }
+
+        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            Log.e(TAG, "onFailure: ",t )
+        }
+
+        private fun read(response: Response<ResponseBody>){
+            Log.d(TAG, "read: ")
+            try {
+                val body = response.body() ?: return
+                val inputStream = body.byteStream()
+                val reader = JsonReader(InputStreamReader(inputStream))
+                val gson = GsonBuilder().create()
+                Log.d(TAG, "run: Read while")
+                var j = gson.fromJson<JsonObject>(reader, JsonObject::class.java)
+                // Tweet tweet = new Tweet(j.get("text").getAsString());
+                ///Tweet tweet = Tweet.fromJsonObject(j);
+                Log.d(TAG, "read: $j")
+                while (true) {
+                    // Several types of messages can be sent.
+                    // Some are not Tweet objects.
+                    // https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object.html
+                    j = gson.fromJson(reader, JsonObject::class.java)
+                    Log.d(TAG, "run: $j")
+                }
+            } catch (e: JsonSyntaxException) {
+                Log.v(TAG, "Stopped streaming.")
+            }
+            Log.d(TAG, "run: End")
+        }
+    }
 }
