@@ -1,4 +1,4 @@
-package io.github.bubinimara.myapplication
+package io.github.bubinimara.davibet
 
 import android.app.Application
 
