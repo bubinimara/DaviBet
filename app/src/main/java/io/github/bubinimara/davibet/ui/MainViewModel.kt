@@ -22,17 +22,10 @@ class MainViewModel : ViewModel() {
         repository = DataRepositoryImpl(ns.apiService)
     }
     fun load() {
-        Log.d(TAG, "load: ")
-       /// repository.justStream()
-        val l = viewModelScope.launch {
-            repository.courinteCheck().collect {
-                Log.d(TAG, "load: $it")
+        viewModelScope.launch {
+            repository.streamTweets("some tweet").collect {
+                Log.d(TAG, "Tweet:  $it")
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.d(TAG, "onCleared: ")
     }
 }

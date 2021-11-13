@@ -15,9 +15,4 @@ class MainActivity : AppCompatActivity() {
                 .commitNow()
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("MainActivity", "onDestroy: ")
-    }
 }
