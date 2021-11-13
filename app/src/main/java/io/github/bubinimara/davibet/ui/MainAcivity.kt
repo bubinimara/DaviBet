@@ -2,6 +2,7 @@ package io.github.bubinimara.davibet.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import io.github.bubinimara.davibet.R
 
 class MainActivity : AppCompatActivity() {
@@ -13,5 +14,10 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.container, MainFragment.newInstance())
                 .commitNow()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MainActivity", "onDestroy: ")
     }
 }

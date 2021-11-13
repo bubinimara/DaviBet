@@ -6,6 +6,9 @@ import androidx.lifecycle.viewModelScope
 import io.github.bubinimara.davibet.data.DataRepository
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
 import io.github.bubinimara.davibet.data.network.NetworkServices
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -21,10 +24,15 @@ class MainViewModel : ViewModel() {
     fun load() {
         Log.d(TAG, "load: ")
        /// repository.justStream()
-        viewModelScope.launch {
-            repository.streamTweets("").collect {
+        val l = viewModelScope.launch {
+            repository.courinteCheck().collect {
                 Log.d(TAG, "load: $it")
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(TAG, "onCleared: ")
     }
 }
