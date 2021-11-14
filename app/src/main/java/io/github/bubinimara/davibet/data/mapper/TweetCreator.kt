@@ -14,7 +14,7 @@ object TweetCreator {
         if(jsonObject.has("text")) {
             val text = jsonObject.get("text").asString
             // add all others fields ...
-            return Tweet(text)
+            return Tweet(text,System.currentTimeMillis())
         }
         // not all are tweet.
         throw JsonParseException("The json object is not a Tweet: ${jsonObject.toString()}")

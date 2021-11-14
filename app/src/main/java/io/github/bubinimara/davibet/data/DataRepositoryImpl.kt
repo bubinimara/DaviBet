@@ -22,6 +22,18 @@ class DataRepositoryImpl(private val apiService:ApiService) : DataRepository {
         const val TAG = "DataRepository"
     }
 
+    fun getTweets(track: String):Flow<List<Tweet>>{
+        return flow<List<Tweet>> {
+        var i=0
+        var tweets = mutableListOf<Tweet>()
+            while (currentCoroutineContext().isActive){
+                tweets.add(0, Tweet("$i"))
+                i++
+                emit(tweets)
+                delay(1000)
+            }
+        }.flowOn(Dispatchers.IO)
+    }
     override fun streamTweets(track: String): Flow<Tweet> {
         Log.d(TAG, "streamTweets: $track")
         return flow<Tweet> {
