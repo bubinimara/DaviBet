@@ -25,6 +25,10 @@ class MainViewModel() : ViewModel() {
     // todo:inject with hilt
     private val repository:DataRepositoryImpl
 
+    // current job to fetch tweets
+    private var job:Job? = null
+
+
     private val _tweets = MutableLiveData<List<Tweet>>()
     val tweets:LiveData<List<Tweet>> = _tweets
 
@@ -40,8 +44,6 @@ class MainViewModel() : ViewModel() {
 
         viewModelScope.launch {
             networkMonitor.isAvailable().collect {isConnected->
-            // some logic here to handle disconnections
-                Log.d(TAG, "connection: $isConnected")
                 _eventConnection.value = Event(isConnected)
                 if(isConnected){
                     load()
@@ -55,20 +57,13 @@ class MainViewModel() : ViewModel() {
         if(job!=null) job!!.cancel()
         job = null
     }
-    var job:Job? = null
     fun load() {
-        cancelJobs()
+        cancelJobs() // cancel previous job
         job = viewModelScope.launch {
-            repository.getTweets("some tweet cat").collect {
+            repository.getTweets("Brasil").collect {
                 Log.d(TAG, "load: Received " + it.size)
                 _tweets.value = it
             }
-
-/*
-            repository.streamTweets("some tweet").collect {
-                Log.d(TAG, "Tweet:  $it")
-            }
-*/
         }
     }
 }

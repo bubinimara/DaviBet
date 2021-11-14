@@ -19,6 +19,7 @@ import retrofit2.Response
 import java.io.Closeable
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.util.*
 
 
 /**
@@ -33,7 +34,7 @@ class StreamTweet(val apiService: ApiService) {
     fun toFlow(track: String): Flow<Tweet> {
         Log.d(DataRepositoryImpl.TAG, "streamTweets: $track")
         return flow<Tweet> {
-            val call = apiService.track()
+            val call = apiService.track(track)
             val responseBody = call.execute()
             val streamReader = StreamReaderFlow(responseBody)
             val tweetsFlow = streamReader.read()
