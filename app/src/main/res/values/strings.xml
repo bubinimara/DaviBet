@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DaviBet</string>
+    <string name="no_connection">No Internent :(</string>
+    <string name="connection_ready">"Connected "</string>
 </resources>

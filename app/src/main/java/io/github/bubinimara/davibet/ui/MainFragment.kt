@@ -2,7 +2,6 @@ package io.github.bubinimara.davibet.ui
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,9 +10,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import io.github.bubinimara.davibet.EventObserver
+import io.github.bubinimara.davibet.R
 import io.github.bubinimara.davibet.databinding.MainFragmentBinding
 import io.github.bubinimara.davibet.ui.adapter.TweetAdapter
-import kotlinx.coroutines.delay
 
 class MainFragment : Fragment() {
 
@@ -49,6 +50,18 @@ class MainFragment : Fragment() {
             if(autoScrollListener.shouldAutoScroll)
                 viewBinding.recyclerView.scrollToPosition(0)
         })
+
+        viewModel.eventConnection.observe(viewLifecycleOwner,EventObserver{
+            showConnectionStatus(it)
+        })
+    }
+
+    private fun showConnectionStatus(isConnected: Boolean) {
+        if(isConnected){
+            Snackbar.make(viewBinding.root, R.string.connection_ready,Snackbar.LENGTH_SHORT).show()
+        }else{
+            Snackbar.make(viewBinding.root, R.string.no_connection,Snackbar.LENGTH_INDEFINITE).show()
+        }
     }
 
     override fun onDestroy() {
