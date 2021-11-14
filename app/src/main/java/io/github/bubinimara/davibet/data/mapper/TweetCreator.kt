@@ -9,12 +9,14 @@ import io.github.bubinimara.davibet.data.model.Tweet
  *
  * Created by Davide Parise on 13/11/21.
  */
-object TweetMapper {
-    fun createTweet(jsonObject: JsonObject):Tweet{
+object TweetCreator {
+    fun createFromJson(jsonObject: JsonObject):Tweet{
         if(jsonObject.has("text")) {
             val text = jsonObject.get("text").asString
+            // add all others fields ...
             return Tweet(text)
         }
+        // not all are tweet.
         throw JsonParseException("The json object is not a Tweet: ${jsonObject.toString()}")
     }
 }

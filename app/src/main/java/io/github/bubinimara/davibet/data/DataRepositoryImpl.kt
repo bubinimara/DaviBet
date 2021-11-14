@@ -9,7 +9,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.JsonReader
-import io.github.bubinimara.davibet.data.mapper.TweetMapper
+import io.github.bubinimara.davibet.data.mapper.TweetCreator
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.Closeable
@@ -49,29 +49,19 @@ class DataRepositoryImpl(private val apiService:ApiService) : DataRepository {
                     val reader = JsonReader(InputStreamReader(inputStream))
                     val gson = GsonBuilder().create()
                     while (currentCoroutineContext().isActive) {
-                        // Some are not Tweet objects.
                         val j = gson.fromJson<JsonObject>(reader, JsonObject::class.java)
                         try {
-                            emit(TweetMapper.createTweet(j))
+                            emit(TweetCreator.createFromJson(j))
                         } catch (e: JsonParseException) {
+                            // Some are not Tweet objects.Just ignore it for the moment
+                            // TODO: handle the others type of messages
                             Log.e(TAG, "read: ",e )
-
                         }
-/*
-                        Log.d(TAG, "****************** OBJ *********************************** ")
-                        Log.d("_Readed", "run: $j")
-                        Log.d(TAG, "***************** END OBJ ********************************* ")
-*/
                     }
                     close()
               } catch (e: JsonSyntaxException) {
-
-                    Log.d(TAG, "********************** ERROR ******************************** ")
-                    Log.v(TAG, "Stopped streaming.")
-                    e.printStackTrace()
-                    Log.d(TAG, "********************* END ERROR ******************************** ")
+                    Log.e(TAG, "read: Json Exception:",e )
                 }
-                Log.d(TAG, "run: End")
             }
         }
 
