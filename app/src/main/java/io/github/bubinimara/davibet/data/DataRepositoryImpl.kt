@@ -29,7 +29,7 @@ class DataRepositoryImpl(private val apiService:ApiService) : DataRepository {
             while (currentCoroutineContext().isActive){
                 tweets.add(0, Tweet("$i"))
                 i++
-                emit(tweets)
+                emit(tweets.subList(0,Math.min(tweets.size,30)))
                 delay(1000)
             }
         }.flowOn(Dispatchers.IO)
