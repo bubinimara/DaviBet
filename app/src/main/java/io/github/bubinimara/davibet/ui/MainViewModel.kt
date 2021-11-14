@@ -1,17 +1,20 @@
 package io.github.bubinimara.davibet.ui
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.github.bubinimara.davibet.App
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
+import io.github.bubinimara.davibet.data.db.AppDb
 import io.github.bubinimara.davibet.data.model.Tweet
 import io.github.bubinimara.davibet.data.network.NetworkServices
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel() : ViewModel() {
     companion object{
         const val TAG = "MainViewModel"
     }
@@ -24,7 +27,8 @@ class MainViewModel : ViewModel() {
 
     init {
         val networkServices = NetworkServices()
-        repository = DataRepositoryImpl(networkServices.apiService)
+        val databaseService = App.database!!
+        repository = DataRepositoryImpl(networkServices.apiService,databaseService.tweetDat())
     }
     fun load() {
         viewModelScope.launch {

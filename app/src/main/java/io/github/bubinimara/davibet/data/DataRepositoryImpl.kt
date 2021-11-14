@@ -9,6 +9,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.JsonReader
+import io.github.bubinimara.davibet.data.db.TweetDao
 import io.github.bubinimara.davibet.data.mapper.TweetCreator
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -17,7 +18,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 
 
-class DataRepositoryImpl(private val apiService:ApiService) : DataRepository {
+class DataRepositoryImpl(private val apiService:ApiService,private val dbService:TweetDao) : DataRepository {
     companion object{
         const val TAG = "DataRepository"
     }
@@ -25,15 +26,19 @@ class DataRepositoryImpl(private val apiService:ApiService) : DataRepository {
     fun getTweets(track: String):Flow<List<Tweet>>{
         return flow<List<Tweet>> {
         var i=0
-        var tweets = mutableListOf<Tweet>()
-            while (currentCoroutineContext().isActive){
-                tweets.add(0, Tweet("$i"))
-                i++
-                emit(tweets.subList(0,Math.min(tweets.size,30)))
-                delay(1000)
+            GlobalScope.launch {
+                while (currentCoroutineContext().isActive){
+                    Log.d(TAG, "getTweets: Inserting tweet $i")
+                    dbService.insertTweet(Tweet("$i"))
+                    i++
+                    delay(1000)
+                }
             }
+            emitAll(dbService.getTweets())
+
         }.flowOn(Dispatchers.IO)
     }
+
     override fun streamTweets(track: String): Flow<Tweet> {
         Log.d(TAG, "streamTweets: $track")
         return flow<Tweet> {
