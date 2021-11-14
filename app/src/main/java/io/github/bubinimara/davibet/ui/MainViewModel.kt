@@ -11,6 +11,7 @@ import io.github.bubinimara.davibet.data.DataRepositoryImpl
 import io.github.bubinimara.davibet.data.db.AppDb
 import io.github.bubinimara.davibet.data.model.Tweet
 import io.github.bubinimara.davibet.data.network.NetworkServices
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -30,10 +31,12 @@ class MainViewModel() : ViewModel() {
         val databaseService = App.database!!
         repository = DataRepositoryImpl(networkServices.apiService,databaseService.tweetDat())
     }
+    var job:Job? = null
     fun load() {
-        viewModelScope.launch {
+        if(job!=null) job!!.cancel()
+        job = viewModelScope.launch {
             repository.getTweets("some tweet").collect {
-                Log.d(TAG, "load: Received "+it.size)
+                Log.d(TAG, "load: Received " + it.size)
                 _tweets.value = it
             }
 /*
