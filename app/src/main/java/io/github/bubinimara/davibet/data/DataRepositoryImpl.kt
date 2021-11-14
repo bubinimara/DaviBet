@@ -25,13 +25,15 @@ class DataRepositoryImpl(private val apiService:ApiService,private val dbService
 
     fun getTweets(track: String):Flow<List<Tweet>>{
         return flow<List<Tweet>> {
-        var i=0
+            dbService.removeTweets()
             GlobalScope.launch {
+                var i=0
                 while (currentCoroutineContext().isActive){
                     Log.d(TAG, "getTweets: Inserting tweet $i")
                     dbService.insertTweet(Tweet("$i"))
                     i++
                     delay(1000)
+
                 }
             }
             emitAll(dbService.getTweets())

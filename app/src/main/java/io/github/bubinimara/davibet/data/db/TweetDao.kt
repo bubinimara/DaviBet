@@ -23,4 +23,7 @@ interface TweetDao {
 
     @Query("select * from tweets order by tweetId desc limit 50")
     fun getTweets(): Flow<List<Tweet>>
+
+    @Query("delete from tweets")
+    fun removeTweets()
 }
