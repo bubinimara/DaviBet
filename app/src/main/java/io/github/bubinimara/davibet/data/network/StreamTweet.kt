@@ -21,7 +21,7 @@ import java.io.InputStreamReader
  *
  * Created by Davide Parise
  */
-class StreamTweet(private val apiService: ApiService) {
+ class StreamTweet(private val apiService: ApiService) {
     companion object {
         const val TAG = "StreamTweet"
     }
@@ -48,7 +48,7 @@ class StreamTweet(private val apiService: ApiService) {
                 // to much retries
                 return@retryWhen false
             }
-            if(e is NetworkException && e.code == 402){
+            if(e is NetworkException && e.code == 420){
                 // limit rate reached
                 return@retryWhen false
             }
