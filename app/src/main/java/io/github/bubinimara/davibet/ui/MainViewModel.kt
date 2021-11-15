@@ -5,23 +5,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.bubinimara.davibet.App
 import io.github.bubinimara.davibet.Event
 import io.github.bubinimara.davibet.R
+import io.github.bubinimara.davibet.data.DataRepository
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
+import io.github.bubinimara.davibet.data.db.DatabaseService
 import io.github.bubinimara.davibet.data.model.Tweet
+import io.github.bubinimara.davibet.data.network.NetworkMonitor
 import io.github.bubinimara.davibet.data.network.NetworkServices
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel() : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    val networkMonitor: NetworkMonitor,
+    val repository: DataRepository
+) : ViewModel() {
     companion object{
         const val TAG = "MainViewModel"
     }
-
-    // todo:inject with hilt
-    private val repository:DataRepositoryImpl
 
     // current job to fetch tweets
     private var job:Job? = null
@@ -38,10 +44,6 @@ class MainViewModel() : ViewModel() {
 
 
     init {
-        val networkServices = NetworkServices()
-        val networkMonitor = App.networkMonitor!!
-        val databaseService = App.database!!
-        repository = DataRepositoryImpl(networkServices.apiService,databaseService.tweetDat())
 
         viewModelScope.launch {
             networkMonitor.isAvailable().collect {isConnected->

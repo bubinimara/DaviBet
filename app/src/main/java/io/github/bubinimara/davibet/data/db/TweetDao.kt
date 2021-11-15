@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit
  */
 @Dao
 interface TweetDao {
-companion object{
-    private const val TABLE_LIMIT = 100
-    var TWEET_LIFETIME = TimeUnit.SECONDS.toMillis(2)
-}
+    companion object{
+        private const val TABLE_LIMIT = 1000
+        var TWEET_LIFETIME = TimeUnit.SECONDS.toMillis(20)
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTweet(tweet: Tweet)

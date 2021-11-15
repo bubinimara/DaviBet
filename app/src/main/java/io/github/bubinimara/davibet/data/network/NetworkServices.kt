@@ -1,14 +1,12 @@
 package io.github.bubinimara.davibet.data.network
 
-import io.github.bubinimara.davibet.data.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer
+import se.akerfeldt.okhttp.signpost.SigningInterceptor
 import java.util.concurrent.TimeUnit
-import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
-import se.akerfeldt.okhttp.signpost.SigningInterceptor;
-
 
 
 /**

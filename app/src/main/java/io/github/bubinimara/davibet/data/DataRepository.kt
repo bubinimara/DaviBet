@@ -13,5 +13,5 @@ interface DataRepository {
      * Streams Tweets
      * @param track Keywords to track. Phrases of keywords are specified by a comma-separated list
      */
-    fun streamTweets(track:String):Flow<Tweet>
+    fun getTweets(track:String):Flow<List<Tweet>>
 }

@@ -16,15 +16,15 @@ import io.github.bubinimara.davibet.data.model.Tweet
 
 @Database(entities = [Tweet::class], version = 1, exportSchema = false)
 @AutoMigration(from = 0,to = 1)
-abstract class AppDb: RoomDatabase() {
+abstract class DatabaseService: RoomDatabase() {
     abstract fun tweetDat():TweetDao
 
     companion object{
-        private var INSTANCE: AppDb ?= null
+        private var INSTANCE: DatabaseService ?= null
 
-        fun getDb(context: Context):AppDb{
+        fun getDb(context: Context):DatabaseService{
             return INSTANCE ?: synchronized(this){
-                val instance = Room.databaseBuilder(context.applicationContext, AppDb::class.java,"app_db")
+                val instance = Room.databaseBuilder(context.applicationContext, DatabaseService::class.java,"app_db")
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

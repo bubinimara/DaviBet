@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.callbackFlow
  * Monitor the connection and send a flow of data when connection change
  *
  */
-class NetworkMonitor(val context: Context) {
-    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+class NetworkMonitor(context: Context) {
+    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
 
 
     @ExperimentalCoroutinesApi
@@ -51,7 +51,7 @@ class NetworkMonitor(val context: Context) {
             }
 
             awaitClose {
-                connectivityManager.unregisterNetworkCallback(networkStatusCallback)
+                connectivityManager?.unregisterNetworkCallback(networkStatusCallback)
             }
         }
     }

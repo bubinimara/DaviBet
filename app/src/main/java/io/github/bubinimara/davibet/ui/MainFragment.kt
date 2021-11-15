@@ -13,11 +13,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.bubinimara.davibet.EventObserver
 import io.github.bubinimara.davibet.R
 import io.github.bubinimara.davibet.databinding.MainFragmentBinding
 import io.github.bubinimara.davibet.ui.adapter.TweetAdapter
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
     companion object {

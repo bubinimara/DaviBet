@@ -6,25 +6,23 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.stream.JsonReader
-import io.github.bubinimara.davibet.data.ApiService
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
 import io.github.bubinimara.davibet.data.mapper.TweetCreator
 import io.github.bubinimara.davibet.data.model.Tweet
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.isActive
 import okhttp3.ResponseBody
-import okhttp3.internal.wait
 import retrofit2.Response
 import java.io.Closeable
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.*
 
 
 /**
  *
- * Created by Davide Parise on 14/11/21.
+ * Created by Davide Parise
  */
 class StreamTweet(val apiService: ApiService) {
     companion object {
