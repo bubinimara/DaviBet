@@ -1,4 +1,4 @@
-package io.github.bubinimara.davibet.data.mapper
+package io.github.bubinimara.davibet.data.util
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException

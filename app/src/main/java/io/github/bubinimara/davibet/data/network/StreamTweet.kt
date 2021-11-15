@@ -6,7 +6,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.stream.JsonReader
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
-import io.github.bubinimara.davibet.data.mapper.TweetCreator
+import io.github.bubinimara.davibet.data.util.TweetCreator
 import io.github.bubinimara.davibet.data.model.Tweet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
@@ -17,7 +17,6 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.Closeable
 import java.io.InputStreamReader
-import kotlin.math.log
 
 
 /**
