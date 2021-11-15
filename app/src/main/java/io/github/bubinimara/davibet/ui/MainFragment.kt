@@ -2,10 +2,10 @@ package io.github.bubinimara.davibet.ui
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -48,9 +48,14 @@ class MainFragment : Fragment() {
         viewBinding.recyclerView.adapter = adapter
         viewBinding.recyclerView.addOnScrollListener(autoScrollListener)
         viewBinding.searchBtn.setOnClickListener {
-            val text = viewBinding.searchText.text.toString()
-            viewModel.search(text)
-            hideKeyboard()
+            doSearch()
+        }
+        viewBinding.searchText.setOnEditorActionListener { textView, actionId, keyEvent ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                doSearch()
+                true
+            }
+            false
         }
         viewModel.tweets.observe(viewLifecycleOwner, Observer {
             adapter.set(it)
@@ -67,6 +72,11 @@ class MainFragment : Fragment() {
         })
     }
 
+    private fun doSearch(){
+        val text = viewBinding.searchText.text.toString()
+        viewModel.search(text)
+        hideKeyboard()
+    }
 
     private fun showConnectionStatus(isConnected: Boolean) {
         if(isConnected){
