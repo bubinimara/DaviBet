@@ -13,12 +13,14 @@ import io.github.bubinimara.davibet.data.DataRepository
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
 import io.github.bubinimara.davibet.data.db.DatabaseService
 import io.github.bubinimara.davibet.data.model.Tweet
+import io.github.bubinimara.davibet.data.network.NetworkException
 import io.github.bubinimara.davibet.data.network.NetworkMonitor
 import io.github.bubinimara.davibet.data.network.NetworkServices
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +35,8 @@ class MainViewModel @Inject constructor(
     // current job to fetch tweets
     private var job:Job? = null
 
+    // current text to search
+    private var search:String = ""
 
     private val _tweets = MutableLiveData<List<Tweet>>()
     val tweets:LiveData<List<Tweet>> = _tweets
@@ -45,11 +49,11 @@ class MainViewModel @Inject constructor(
 
 
     init {
-
         viewModelScope.launch {
             networkMonitor.isAvailable().collect {isConnected->
                 _eventConnection.value = Event(isConnected)
                 if(isConnected){
+                    if(job == null && search.isNotEmpty())
                     load()
                 }else{
                     cancelJobs()
@@ -61,7 +65,6 @@ class MainViewModel @Inject constructor(
         if(job!=null) job!!.cancel()
         job = null
     }
-    var search:String = ""
 
     fun search(text:String){
         if(text.isEmpty()){
@@ -76,9 +79,16 @@ class MainViewModel @Inject constructor(
         cancelJobs() // cancel previous job
         job = viewModelScope.launch {
             repository.getTweets(search)
-                .catch {
+                .catch { e->
                     Log.e(TAG, "load: Error" )
-                    _eventError.value = Event(R.string.error_unknown)
+                    if(e is NetworkException){
+                        if(e.code == 420)
+                            _eventError.value = Event(R.string.error_net_to_much_call)
+                        else
+                            _eventError.value = Event(R.string.error_net)
+                    }else {
+                        _eventError.value = Event(R.string.error_unknown)
+                    }
                 }
                 .collect {
                 Log.d(TAG, "load: Received " + it.size)

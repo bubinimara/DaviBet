@@ -40,8 +40,8 @@ class NetworkServices {
 
         val client = OkHttpClient.Builder()
             //.addInterceptor(interceptor)
-            .connectTimeout(100, TimeUnit.SECONDS)
-            .readTimeout(100, TimeUnit.SECONDS) // every 20 seconds twitter send a ping
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS) // every 20 seconds twitter send a ping
            // .addInterceptor(logInterceptor)
             .addInterceptor(SigningInterceptor(consumer))
             .build()

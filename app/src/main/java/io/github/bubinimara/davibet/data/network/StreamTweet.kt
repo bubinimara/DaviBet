@@ -68,7 +68,7 @@ class StreamTweet(val apiService: ApiService) {
             return flow {
                 try {
                     if (!response.isSuccessful) {
-                        throw Throwable("Server response not successful: code  ${response.code()}")
+                        throw NetworkException("Server response not successful: code  ${response.code()}",response.code())
                     }
                     val body = response.body() ?: throw Exception("Body is null")
                     inputStream = body.byteStream()

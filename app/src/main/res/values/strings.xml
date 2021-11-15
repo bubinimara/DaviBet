@@ -5,4 +5,6 @@
     <string name="hint_search">Type something</string>
     <string name="error_search_filed_empty">Must search something</string>
     <string name="error_unknown">An Error occur</string>
+    <string name="error_net_to_much_call">Too much call... wait</string>
+    <string name="error_net">Network Error</string>
 </resources>
