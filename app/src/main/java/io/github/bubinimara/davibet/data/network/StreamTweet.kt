@@ -11,11 +11,14 @@ import io.github.bubinimara.davibet.data.mapper.TweetCreator
 import io.github.bubinimara.davibet.data.model.Tweet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.isActive
 import okhttp3.ResponseBody
+import retrofit2.HttpException
 import retrofit2.Response
 import java.io.Closeable
+import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 
@@ -31,16 +34,29 @@ class StreamTweet(val apiService: ApiService) {
 
     fun toFlow(track: String): Flow<Tweet> {
         Log.d(DataRepositoryImpl.TAG, "streamTweets: $track")
+        val backoff = 1000L
         return flow<Tweet> {
+
             val call = apiService.track(track)
             val responseBody = call.execute()
             val streamReader = StreamReaderFlow(responseBody)
             val tweetsFlow = streamReader.read()
             emitAll(tweetsFlow)
 
-        }.retry(3) { e->
-            Log.e(TAG, "streamTweets: ",e )
-            false // not retry
+        }.retryWhen() { e,count->
+            Log.e(TAG, "streamTweets: Try Retry ",e )
+            if(count > 3)
+                return@retryWhen false
+            when(e){
+                is IOException -> {}
+                is HttpException -> {
+                    if(e.code() == 420){
+                        return@retryWhen false
+                    }
+                }
+                else ->  {}          }
+            delay(backoff*count)
+            true
         }.flowOn(Dispatchers.IO)
     }
 

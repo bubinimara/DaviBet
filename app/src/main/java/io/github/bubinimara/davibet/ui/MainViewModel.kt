@@ -16,6 +16,7 @@ import io.github.bubinimara.davibet.data.model.Tweet
 import io.github.bubinimara.davibet.data.network.NetworkMonitor
 import io.github.bubinimara.davibet.data.network.NetworkServices
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -74,7 +75,12 @@ class MainViewModel @Inject constructor(
     private fun load() {
         cancelJobs() // cancel previous job
         job = viewModelScope.launch {
-            repository.getTweets(search).collect {
+            repository.getTweets(search)
+                .catch {
+                    Log.e(TAG, "load: Error" )
+                    _eventError.value = Event(R.string.error_unknown)
+                }
+                .collect {
                 Log.d(TAG, "load: Received " + it.size)
                 _tweets.value = it
             }

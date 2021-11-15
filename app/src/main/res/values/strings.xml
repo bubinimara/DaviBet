@@ -4,4 +4,5 @@
     <string name="connection_ready">"Online! "</string>
     <string name="hint_search">Type something</string>
     <string name="error_search_filed_empty">Must search something</string>
+    <string name="error_unknown">An Error occur</string>
 </resources>

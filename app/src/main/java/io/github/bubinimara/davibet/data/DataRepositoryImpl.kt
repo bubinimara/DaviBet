@@ -52,6 +52,8 @@ class DataRepositoryImpl(private val apiService: ApiService, private val dbServi
             }
         }.catch { e->
             Log.e(TAG, "getTweets: ",e )
+            // handle error
+            throw e
         }.flowOn(Dispatchers.IO)
     }
 }
