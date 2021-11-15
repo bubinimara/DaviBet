@@ -1,5 +1,6 @@
 package io.github.bubinimara.davibet.ui
 
+import android.app.Activity
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,13 +41,15 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        if(savedInstanceState==null)
-            viewModel.load()
 
         viewBinding.recyclerView.layoutManager = LinearLayoutManager(context)
         viewBinding.recyclerView.adapter = adapter
         viewBinding.recyclerView.addOnScrollListener(autoScrollListener)
-
+        viewBinding.searchBtn.setOnClickListener {
+            val text = viewBinding.searchText.text.toString()
+            viewModel.search(text)
+            hideKeyboard()
+        }
         viewModel.tweets.observe(viewLifecycleOwner, Observer {
             adapter.set(it)
             if(autoScrollListener.shouldAutoScroll)
@@ -55,7 +59,12 @@ class MainFragment : Fragment() {
         viewModel.eventConnection.observe(viewLifecycleOwner,EventObserver{
             showConnectionStatus(it)
         })
+
+        viewModel.eventError.observe(viewLifecycleOwner, EventObserver {resString->
+            Snackbar.make(viewBinding.root,resString,Snackbar.LENGTH_SHORT).show()
+        })
     }
+
 
     private fun showConnectionStatus(isConnected: Boolean) {
         if(isConnected){
@@ -85,9 +94,10 @@ class MainFragment : Fragment() {
             }
         }
 
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-        }
+    }
 
+    private fun hideKeyboard() {
+        val inputMethodManager = requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(viewBinding.root.windowToken, 0)
     }
 }

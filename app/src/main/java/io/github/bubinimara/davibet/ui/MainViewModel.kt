@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.bubinimara.davibet.App
 import io.github.bubinimara.davibet.Event
+import io.github.bubinimara.davibet.R
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
 import io.github.bubinimara.davibet.data.model.Tweet
 import io.github.bubinimara.davibet.data.network.NetworkServices
@@ -32,6 +33,9 @@ class MainViewModel() : ViewModel() {
     private val _eventConnection = MutableLiveData<Event<Boolean>>()
     val eventConnection:LiveData<Event<Boolean>> = _eventConnection
 
+    private val _eventError = MutableLiveData<Event<Int>>()
+    val eventError:LiveData<Event<Int>> = _eventError
+
 
     init {
         val networkServices = NetworkServices()
@@ -54,10 +58,21 @@ class MainViewModel() : ViewModel() {
         if(job!=null) job!!.cancel()
         job = null
     }
-    fun load() {
+    var search:String = ""
+
+    fun search(text:String){
+        if(text.isEmpty()){
+            _eventError.value = Event(R.string.error_search_filed_empty)
+            return
+        }
+        // others checks ...
+        search = text
+        load()
+    }
+    private fun load() {
         cancelJobs() // cancel previous job
         job = viewModelScope.launch {
-            repository.getTweets("Brasil").collect {
+            repository.getTweets(search).collect {
                 Log.d(TAG, "load: Received " + it.size)
                 _tweets.value = it
             }
