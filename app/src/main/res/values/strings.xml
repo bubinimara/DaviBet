@@ -7,4 +7,5 @@
     <string name="error_unknown">An Error occur</string>
     <string name="error_net_to_much_call">Too much call... wait</string>
     <string name="error_net">Network Error</string>
+    <string name="error_net_no_server_response">No response from server</string>
 </resources>

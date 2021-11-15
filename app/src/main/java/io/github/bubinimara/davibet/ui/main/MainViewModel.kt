@@ -16,6 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,14 +77,16 @@ class MainViewModel @Inject constructor(
             repository.getTweets(search)
                 .catch { e->
                     Log.e(TAG, "load: Error" )
-                    if(e is NetworkException){
-                        if(e.code == 420) {
-                            _eventError.value = Event(R.string.error_net_to_much_call)
-                        }else{
-                            _eventError.value = Event(R.string.error_net)
+                    when(e){
+                        is NetworkException ->{
+                            if(e.code == 420) {
+                                _eventError.value = Event(R.string.error_net_to_much_call)
+                            }else{ // 202
+                                _eventError.value = Event(R.string.error_net_no_server_response)
+                            }
                         }
-                    }else {
-                        _eventError.value = Event(R.string.error_unknown)
+                        is HttpException -> _eventError.value = Event(R.string.error_net)
+                        else -> _eventError.value = Event(R.string.error_unknown)
                     }
                 }
                 .collect {
