@@ -1,4 +1,4 @@
-package io.github.bubinimara.davibet.ui
+package io.github.bubinimara.davibet.ui.main
 
 import android.app.Activity
 import android.os.Bundle
@@ -87,8 +87,8 @@ class MainFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         _viewBinding = null
+        super.onDestroy()
     }
 
     class AutoScrollListener: RecyclerView.OnScrollListener() {

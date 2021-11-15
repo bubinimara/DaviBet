@@ -1,4 +1,4 @@
-package io.github.bubinimara.davibet.ui
+package io.github.bubinimara.davibet.ui.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,21 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.bubinimara.davibet.App
 import io.github.bubinimara.davibet.Event
 import io.github.bubinimara.davibet.R
 import io.github.bubinimara.davibet.data.DataRepository
-import io.github.bubinimara.davibet.data.DataRepositoryImpl
-import io.github.bubinimara.davibet.data.db.DatabaseService
 import io.github.bubinimara.davibet.data.model.Tweet
 import io.github.bubinimara.davibet.data.network.NetworkException
 import io.github.bubinimara.davibet.data.network.NetworkMonitor
-import io.github.bubinimara.davibet.data.network.NetworkServices
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel

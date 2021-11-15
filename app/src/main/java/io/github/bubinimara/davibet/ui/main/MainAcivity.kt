@@ -1,8 +1,7 @@
-package io.github.bubinimara.davibet.ui
+package io.github.bubinimara.davibet.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.bubinimara.davibet.R
 
