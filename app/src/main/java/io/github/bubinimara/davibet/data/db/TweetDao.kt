@@ -1,9 +1,9 @@
 package io.github.bubinimara.davibet.data.db
 
 import androidx.room.*
+import io.github.bubinimara.davibet.AppConfig
 import io.github.bubinimara.davibet.data.model.Tweet
 import kotlinx.coroutines.flow.Flow
-import java.util.concurrent.TimeUnit
 
 
 /**
@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit
 @Dao
 interface TweetDao {
     companion object{
-        private const val TABLE_LIMIT = 500
-        var TWEET_LIFETIME = TimeUnit.SECONDS.toMillis(30)
+        private const val TABLE_LIMIT = AppConfig.DB_TABLE_SIZE
+        var TWEET_LIFETIME = AppConfig.DB_TWEET_LIFETIME
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -37,6 +37,8 @@ interface TweetDao {
 
     @Transaction
     fun removeExpired(){
-        removeExpired(System.currentTimeMillis() - TWEET_LIFETIME)
+        if(TWEET_LIFETIME>0) {
+            removeExpired(System.currentTimeMillis() - TWEET_LIFETIME)
+        }
     }
 }

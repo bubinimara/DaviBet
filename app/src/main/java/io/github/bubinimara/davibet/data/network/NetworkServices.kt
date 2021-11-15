@@ -1,5 +1,6 @@
 package io.github.bubinimara.davibet.data.network
 
+import io.github.bubinimara.davibet.AppConfig
 import io.github.bubinimara.davibet.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -35,8 +36,8 @@ class NetworkServices {
         )
 
         val client = OkHttpClient.Builder()
-            .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS) // every 20 seconds twitter send a ping
+            .connectTimeout(AppConfig.CONN_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(AppConfig.CONN_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS) // every 20 seconds twitter send a ping
             .addInterceptor(SigningInterceptor(consumer))
             .build()
 
