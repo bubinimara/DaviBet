@@ -62,6 +62,9 @@ class MainViewModel @Inject constructor(
         job = null
     }
 
+    /**
+     * Search for tweet
+     */
     fun search(text:String){
         if(text.isEmpty()){
             _eventError.value = Event(R.string.error_search_filed_empty)
@@ -71,6 +74,10 @@ class MainViewModel @Inject constructor(
         search = text
         load()
     }
+
+    /**
+     * collect tweets
+     */
     private fun load() {
         cancelJobs() // cancel previous job
         job = viewModelScope.launch {
