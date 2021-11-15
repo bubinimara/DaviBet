@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.bubinimara.davibet.EventObserver
+import io.github.bubinimara.davibet.ui.util.EventObserver
 import io.github.bubinimara.davibet.R
 import io.github.bubinimara.davibet.databinding.MainFragmentBinding
 import io.github.bubinimara.davibet.ui.adapter.TweetAdapter
@@ -63,7 +63,7 @@ class MainFragment : Fragment() {
                 viewBinding.recyclerView.scrollToPosition(0)
         })
 
-        viewModel.eventConnection.observe(viewLifecycleOwner,EventObserver{
+        viewModel.eventConnection.observe(viewLifecycleOwner, EventObserver{
             showConnectionStatus(it)
         })
 

@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.bubinimara.davibet.Event
+import io.github.bubinimara.davibet.ui.util.Event
 import io.github.bubinimara.davibet.R
 import io.github.bubinimara.davibet.data.DataRepository
 import io.github.bubinimara.davibet.data.model.Tweet
@@ -34,18 +34,22 @@ class MainViewModel @Inject constructor(
     // current text to search
     private var search:String = ""
 
+    // the tweet to show
     private val _tweets = MutableLiveData<List<Tweet>>()
     val tweets:LiveData<List<Tweet>> = _tweets
 
+    // event for connection state change
     private val _eventConnection = MutableLiveData<Event<Boolean>>()
     val eventConnection:LiveData<Event<Boolean>> = _eventConnection
 
+    // event for error
     private val _eventError = MutableLiveData<Event<Int>>()
     val eventError:LiveData<Event<Int>> = _eventError
 
 
     init {
         viewModelScope.launch {
+            // listener the network state change
             networkMonitor.isAvailable().collect {isConnected->
                 _eventConnection.value = Event(isConnected)
                 if(isConnected){
@@ -57,6 +61,10 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    /**
+     * Cancel jobs
+     */
     private fun cancelJobs(){
         if(job!=null) job!!.cancel()
         job = null

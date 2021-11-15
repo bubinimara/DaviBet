@@ -14,9 +14,10 @@ object AppConfig {
     /*
     * Database
     */
+
     // lifetime of a tweet - after `lifetime` it is removed
     // <=0 to disable it or value >0 expressed in milliseconds
-    /*const*/ val DB_TWEET_LIFETIME = TimeUnit.SECONDS.toMillis(30) // -1L
+    /*const*/ val DB_TWEET_LIFETIME = TimeUnit.SECONDS.toMillis(60) // -1L
 
     // every `interval` truncate de db into `size`
     // <= 0 to disable it or value >0 expressed in milliseconds

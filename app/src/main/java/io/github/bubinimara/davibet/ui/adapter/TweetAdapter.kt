@@ -30,8 +30,7 @@ class TweetAdapter: ListAdapter<Tweet, TweetAdapter.Holder>(TweetDiff()) {
 
     class TweetDiff:DiffUtil.ItemCallback<Tweet>(){
         override fun areItemsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
-            // todo: check id
-            return oldItem.text.equals(newItem.text)
+            return oldItem.tweetId == newItem.tweetId
         }
 
         override fun areContentsTheSame(oldItem: Tweet, newItem: Tweet): Boolean {
@@ -50,7 +49,6 @@ class TweetAdapter: ListAdapter<Tweet, TweetAdapter.Holder>(TweetDiff()) {
     }
 
     fun set(tweets: List<Tweet>) {
-        Log.d("TweetAdapter", "set: "+tweets.size)
         submitList(tweets.toList())
     }
 }

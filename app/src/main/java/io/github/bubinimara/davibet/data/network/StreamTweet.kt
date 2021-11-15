@@ -22,6 +22,10 @@ import java.io.InputStreamReader
 /**
  *
  * Created by Davide Parise
+ * Handle communication  with the server
+ * This class have the responsibility to get the stream of data from server, convert it to tweet object,
+ * and stream it as flow to the caller
+ *
  */
  class StreamTweet(private val apiService: ApiService) {
     companion object {

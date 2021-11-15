@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 /**
  *
- * Created by Davide Parise on 12/11/21.
+ * Created by Davide Parise
  */
 interface DataRepository {
     /**
