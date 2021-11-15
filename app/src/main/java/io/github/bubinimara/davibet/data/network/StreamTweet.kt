@@ -9,12 +9,15 @@ import io.github.bubinimara.davibet.data.DataRepositoryImpl
 import io.github.bubinimara.davibet.data.mapper.TweetCreator
 import io.github.bubinimara.davibet.data.model.Tweet
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.isActive
 import okhttp3.ResponseBody
 import retrofit2.Response
 import java.io.Closeable
 import java.io.InputStreamReader
+import kotlin.math.log
 
 
 /**
@@ -85,7 +88,8 @@ import java.io.InputStreamReader
                     val inputStream = body.byteStream()
                     reader = JsonReader(InputStreamReader(inputStream))
                     val gson = GsonBuilder().create()
-                    while (true) { // read until the flow is cancelled
+
+                    while (currentCoroutineContext().isActive) { // read until the flow is cancelled
                         try {
                             val j = gson.fromJson<JsonObject>(reader, JsonObject::class.java)
                             emit(TweetCreator.createFromJson(j))
@@ -105,6 +109,7 @@ import java.io.InputStreamReader
          * Closing all resources
          */
         override fun close() {
+            Log.d(TAG, "close: Clear connection!")
             kotlin.runCatching {
                 reader?.close()
                 reader = null
