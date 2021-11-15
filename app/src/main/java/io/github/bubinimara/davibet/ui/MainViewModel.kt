@@ -1,6 +1,5 @@
 package io.github.bubinimara.davibet.ui
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,9 +8,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.bubinimara.davibet.App
 import io.github.bubinimara.davibet.Event
 import io.github.bubinimara.davibet.data.DataRepositoryImpl
-import io.github.bubinimara.davibet.data.db.AppDb
 import io.github.bubinimara.davibet.data.model.Tweet
-import io.github.bubinimara.davibet.data.network.NetworkMonitor
 import io.github.bubinimara.davibet.data.network.NetworkServices
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
@@ -66,4 +63,6 @@ class MainViewModel() : ViewModel() {
             }
         }
     }
+
+
 }

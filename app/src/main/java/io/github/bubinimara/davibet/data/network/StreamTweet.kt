@@ -54,7 +54,7 @@ class StreamTweet(val apiService: ApiService) {
             return flow {
                 try {
                     if (!response.isSuccessful) {
-                        throw Throwable("Server response not successful ")
+                        throw Throwable("Server response not successful: code  ${response.code()}")
                     }
                     val body = response.body() ?: throw Exception("Body is null")
                     inputStream = body.byteStream()
@@ -70,7 +70,6 @@ class StreamTweet(val apiService: ApiService) {
                             Log.e(DataRepositoryImpl.TAG, "read: ",e )
                         }
                     }
-                    close()
                 } catch (e: JsonSyntaxException) {
                     Log.e(DataRepositoryImpl.TAG, "read: Json Exception:",e )
                 }
@@ -81,6 +80,7 @@ class StreamTweet(val apiService: ApiService) {
             inputStream?.also {
                 close()
             }
+            inputStream = null
         }
     }
 }
