@@ -1,24 +1,21 @@
 package io.github.bubinimara.davibet
 
 import android.app.Application
+import android.os.Debug
+import android.os.StrictMode
 import dagger.hilt.android.HiltAndroidApp
-import io.github.bubinimara.davibet.data.db.DatabaseService
-import io.github.bubinimara.davibet.data.network.NetworkMonitor
 
 
 /**
  *
- * Created by Davide Parise on 12/11/21.
+ * Created by Davide Parise
  */
 @HiltAndroidApp
 class App: Application() {
-    companion object {
-        var database: DatabaseService? = null
-        var networkMonitor: NetworkMonitor? = null
-    }
     override fun onCreate() {
         super.onCreate()
-        database = DatabaseService.getDb(this)
-        networkMonitor = NetworkMonitor(this)
+        if(BuildConfig.DEBUG) {
+            StrictMode.enableDefaults();
+        }
     }
 }
