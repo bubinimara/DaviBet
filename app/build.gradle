@@ -6,6 +6,11 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     compileSdk 31
     viewBinding {
@@ -20,6 +25,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
+        buildConfigField("String", "API_KEY_SECRET", apikeyProperties['API_KEY_SECRET'])
+        buildConfigField("String", "ACCESS_TOKEN", apikeyProperties['ACCESS_TOKEN'])
+        buildConfigField("String", "ACCESS_TOKEN_SECRET", apikeyProperties['ACCESS_TOKEN_SECRET'])
     }
 
     buildTypes {
@@ -56,19 +66,17 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.37"
 
     // Retrofit
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
-
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'se.akerfeldt:okhttp-signpost:1.1.0'
     implementation 'oauth.signpost:signpost-core:1.2.1.2'
 
-    // KOTLIN COROUTINE
+    // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
 
-    // ROOM
+    // Room
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"

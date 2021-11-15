@@ -1,5 +1,6 @@
 package io.github.bubinimara.davibet.data.network
 
+import io.github.bubinimara.davibet.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,13 +25,13 @@ class NetworkServices {
     init {
 
         val consumer = OkHttpOAuthConsumer(
-            "c5FjVSnAvXKbQoDGCjuPfI1DW",
-            "MScmUMUsITT2dLJ5jBcicybXQ95Nik8WLmr2oNITM3TZV7HETD"
+            BuildConfig.API_KEY,
+            BuildConfig.API_KEY_SECRET
         )
 
         consumer.setTokenWithSecret(
-            "1158702590-u7y8KvDH0fy1deKURiumS3LmbYFuJkVIK5koy4F",
-            "AUdy3EyV6Nf1UNErFu7tcID1a2LQE8L3OBP3XALBC4mOn"
+            BuildConfig.ACCESS_TOKEN,
+            BuildConfig.ACCESS_TOKEN_SECRET
         )
 
         val client = OkHttpClient.Builder()
