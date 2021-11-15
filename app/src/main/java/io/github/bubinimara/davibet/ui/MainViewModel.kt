@@ -82,10 +82,11 @@ class MainViewModel @Inject constructor(
                 .catch { e->
                     Log.e(TAG, "load: Error" )
                     if(e is NetworkException){
-                        if(e.code == 420)
+                        if(e.code == 420) {
                             _eventError.value = Event(R.string.error_net_to_much_call)
-                        else
+                        }else{
                             _eventError.value = Event(R.string.error_net)
+                        }
                     }else {
                         _eventError.value = Event(R.string.error_unknown)
                     }

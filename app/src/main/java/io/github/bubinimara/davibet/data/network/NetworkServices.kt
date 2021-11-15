@@ -1,7 +1,6 @@
 package io.github.bubinimara.davibet.data.network
 
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer
@@ -13,8 +12,6 @@ import java.util.concurrent.TimeUnit
  *
  * Created by Davide Parise
  */
-private const val contentType = "Content-Type"
-private const val contentTypeValue = "application/json;charset=utf-8"
 
 class NetworkServices {
     private companion object {
@@ -25,8 +22,6 @@ class NetworkServices {
     val apiService: ApiService
 
     init {
-        val logInterceptor = HttpLoggingInterceptor()
-        logInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val consumer = OkHttpOAuthConsumer(
             "c5FjVSnAvXKbQoDGCjuPfI1DW",
@@ -39,10 +34,8 @@ class NetworkServices {
         )
 
         val client = OkHttpClient.Builder()
-            //.addInterceptor(interceptor)
             .connectTimeout(20, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS) // every 20 seconds twitter send a ping
-           // .addInterceptor(logInterceptor)
             .addInterceptor(SigningInterceptor(consumer))
             .build()
 
