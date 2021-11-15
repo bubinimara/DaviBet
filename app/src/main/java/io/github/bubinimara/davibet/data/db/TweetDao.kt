@@ -37,8 +37,6 @@ interface TweetDao {
 
     @Transaction
     fun removeExpired(){
-        if(TWEET_LIFETIME>0) {
-            removeExpired(System.currentTimeMillis() - TWEET_LIFETIME)
-        }
+        removeExpired(System.currentTimeMillis() - TWEET_LIFETIME)
     }
 }
